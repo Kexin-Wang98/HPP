@@ -32,11 +32,11 @@
 % --- CONFIGURATION ---
 % Define the root directories for your data and atlases.
 % It is highly recommended to use relative paths or define all paths here.
-path_base_input = '/path/to/your/project/directory';
-path_subject_list = fullfile(path_base_input, 'subject_list_dir'); % Dir containing subject folders
-path_raw_fmri_data = fullfile(path_base_input, 'raw_fmri_data'); % Parent dir for raw CIFTI files
-path_smoothed_fmri = fullfile(path_base_input, 'derivatives', 'smoothed_fmri'); % Output for smoothed data
-path_surface_atlases = fullfile(path_base_input, 'atlases', 'surface'); % Dir with .surf.gii files
+path_base_input = 'F:\';
+path_subject_list = 'F:\nonline_diff_parcel_3Tn\'; % Dir containing subject folders
+path_raw_fmri_data = 'H:\HCP100\HCP-100fMRI\'; % Parent dir for raw CIFTI files
+path_smoothed_fmri = 'F:\fmri_3T_smooth\'; % Output for smoothed data
+path_surface_atlases = 'E:\research\atlas\sphere\'; % Dir with .surf.gii files
 
 % --- SETUP ---
 File = dir(path_subject_list);
@@ -50,7 +50,7 @@ fwhm_kernel = 6;
 parpool("local", 4);
 
 % Loop through all subject folders (starting from 3 to skip '.' and '..').
-parfor i = 3:Length_Names
+parfor i = 3:3
     subject_id = FileNames{i};
     fprintf('--- Starting smoothing for subject: %s ---\n', subject_id);
     
@@ -121,7 +121,7 @@ run_templates = { ...
 
 % Parameters for band-pass filtering.
 num_vols_to_discard = 15; % Discard first 15 volumes
-TR = 1; % Repetition Time in seconds. **ADJUST IF YOUR TR IS DIFFERENT**
+TR = 0.72; % Repetition Time in seconds. **ADJUST IF YOUR TR IS DIFFERENT**
 low_cutoff_freq = 0.01; % Low cutoff for band-pass filter (Hz)
 high_cutoff_freq = 0.08; % High cutoff for band-pass filter (Hz)
 add_mean_back = 'Yes'; % Add the mean back to the time series after filtering.
@@ -132,7 +132,7 @@ CUTNUMBER = 10;
 
 % --- PROCESSING LOOP ---
 % NOTE: The original code loops i=3:33. Ensure this range covers all your desired subjects.
-for i = 3:Length_Names
+for i = 3:3
     subject_id = FileNames{i};
     fprintf('--- Starting temporal preprocessing for subject: %s ---\n', subject_id);
     
@@ -240,7 +240,7 @@ end
 %      connectivity profiles.
 % -------------------------------------------------------------------------
 
-for i = 3:Length_Names
+for i = 3:3
     subject_id = FileNames{i};
     subject_dir = fullfile(path_processed_fmri, subject_id);
     fprintf('--- Starting FC calculation for subject: %s ---\n', subject_id);
@@ -288,7 +288,7 @@ end
 % -------------------------------------------------------------------------
 
 % --- SETUP ---
-num_subjects = Length_Names - 2;
+num_subjects = 1;
 % !! NOTE !!: The dimensions for the pre-allocated matrices must match your ROI sizes.
 % Please verify these numbers based on your atlas.
 num_vertices_L = 297; % Example from original code
@@ -299,7 +299,7 @@ FC_similarity_L_all = zeros(num_vertices_L, num_vertices_L, num_subjects);
 FC_similarity_R_all = zeros(num_vertices_R, num_vertices_R, num_subjects);
 
 % --- AGGREGATION LOOP ---
-for i = 3:Length_Names
+for i = 3:3
     subject_id = FileNames{i};
     subject_dir = fullfile(path_processed_fmri, subject_id);
     
@@ -367,12 +367,12 @@ s = FC_DTI_simiL;
 data = s; % Example: s is a pre-loaded variable from your workspace
 
 % NC: The number of clusters to identify.
-num_clusters = your_cluster_count; % Example: 3
+num_clusters = 3; % Example: 3
 
 % Visualization flag and parameters (only used in Part 5).
 enable_visualization = true; % Set to 'false' to skip the visualization part.
-path_to_mask_file = '/path/to/your/mask/file.nii'; % Example for neuroimaging data
-path_to_output_dir = '/path/to/your/output/directory';
+path_to_mask_file = 'E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\GP_mask_3T_left.nii'; % Example for neuroimaging data
+path_to_output_dir = 'E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\';
 output_filename = 'Clustering_Result.nii';
 K = 30;% Nearest neighbors;
 % --- END OF PARAMETERS ---
@@ -582,7 +582,7 @@ end
 fprintf('Clustering complete. Found %d clusters.\n', NC);
 
 %% Visualization
-roiFile='E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\GP_mask_3T_left.nii'; % Replace with the local address of your mask
+roiFile='E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\GP_mask_3T_left.nii';
 %subcortex mask
 [~,ins_roi]=read(roiFile); ind_roi=find(ins_roi);
 GP_lh=zeros(91,109,91);

@@ -34,7 +34,7 @@
 
 % Path to the NIfTI file containing the ROI mask.
 % In this file, different integer labels should define the ROIs.
-path_to_roi_mask = '/path/to/your/roi_mask.nii';
+path_to_roi_mask = 'E:\research\GP-sub\7T_result\dtiAfmri\GP_random6.nii';
 
 % Labels within the mask file that correspond to the left and right ROIs.
 % For example, voxels with values 1, 2, or 3 belong to the left ROI.

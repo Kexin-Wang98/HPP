@@ -39,18 +39,18 @@
 % --- User-Defined Parameters ---
 
 % Base directory for data and masks.
-path_base_dir = '/path/to/your/project/directory';
+path_base_dir = 'E:\research\GP-sub\7T_result\';
 
 % Paths to specific data types.
-path_structural_data = fullfile(path_base_dir, 'derivatives', 'structural_connectivity');
-path_functional_data = fullfile(path_base_dir, 'derivatives', 'functional_timeseries');
+path_structural_data = 'E:\research\GP-sub\7T_result\new_result\result_nonline\nonline_diff_anal\';
+path_functional_data = 'D:\function7Tdata_new\';
 
 % Paths to atlas and mask files.
-path_schaefer_atlas = '/path/to/your/Schaefer400_7Networks.nii';
-path_yeo_networks = '/path/to/your/yeo17network_mask.nii';
-path_roi_parcellation = '/path/to/your/ROI_parcels.nii'; % e.g., GP_random6.nii
-path_roi_left_mask = '/path/to/your/ROI_left_mask.nii';
-path_roi_right_mask = '/path/to/your/ROI_right_mask.nii';
+path_schaefer_atlas = 'E:\research\GP-sub\mask\Schaefer2018_400Parcels_7Networks_order_FSLMNI152_1_6mm.nii';
+path_yeo_networks = 'E:\research\GP-sub\mask\yeo17network_mask.nii';
+path_roi_parcellation = 'E:\research\GP-sub\7T_result\dtiAfmri\GP_random6.nii'; % e.g., GP_random6.nii
+path_roi_left_mask = 'E:\research\GP-sub\mask\GP_leftmask.nii';
+path_roi_right_mask = 'E:\research\GP-sub\mask\GP_rightmask.nii';
 
 % The number of parcels defined within EACH hemisphere of the ROI.
 num_parcels_per_hemisphere = 3; 
@@ -103,7 +103,7 @@ homogeneity_results = zeros(total_parcels, num_subjects);
 fprintf('Starting homogeneity calculation for %d subjects...\n', num_subjects);
 
 % Loop through all subjects (indices start at 3 to skip '.' and '..').
-for i = 3:Length_Names
+for i = 3:3
     subject_id = FileNames{i};
     fprintf('--- Processing Subject: %s (%d/%d) ---\n', subject_id, i-2, num_subjects);
 
