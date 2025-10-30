@@ -363,7 +363,7 @@ fprintf('--- Pipeline complete. Group average matrices are computed and combined
 % --- USER-DEFINED PARAMETERS ---
 % Load your data here. 'data' should be a matrix where each row is a data point
 % and each column is a feature.
-s = FC_DTI_simiL;
+s = FC_DTI_combined_L;
 data = s; % Example: s is a pre-loaded variable from your workspace
 
 % NC: The number of clusters to identify.
