@@ -50,7 +50,7 @@ fwhm_kernel = 6;
 parpool("local", 4);
 
 % Loop through all subject folders (starting from 3 to skip '.' and '..').
-parfor i = 3:3
+parfor i = 3:Length_Names
     subject_id = FileNames{i};
     fprintf('--- Starting smoothing for subject: %s ---\n', subject_id);
     
@@ -132,7 +132,7 @@ CUTNUMBER = 10;
 
 % --- PROCESSING LOOP ---
 % NOTE: The original code loops i=3:33. Ensure this range covers all your desired subjects.
-for i = 3:3
+for i = 3:Length_Names
     subject_id = FileNames{i};
     fprintf('--- Starting temporal preprocessing for subject: %s ---\n', subject_id);
     
@@ -299,7 +299,7 @@ FC_similarity_L_all = zeros(num_vertices_L, num_vertices_L, num_subjects);
 FC_similarity_R_all = zeros(num_vertices_R, num_vertices_R, num_subjects);
 
 % --- AGGREGATION LOOP ---
-for i = 3:3
+for i = 3:Length_Names
     subject_id = FileNames{i};
     subject_dir = fullfile(path_processed_fmri, subject_id);
     
@@ -363,7 +363,7 @@ fprintf('--- Pipeline complete. Group average matrices are computed and combined
 % --- USER-DEFINED PARAMETERS ---
 % Load your data here. 'data' should be a matrix where each row is a data point
 % and each column is a feature.
-s = FC_DTI_simiL;
+s = FC_DTI_combined_L;
 data = s; % Example: s is a pre-loaded variable from your workspace
 
 % NC: The number of clusters to identify.
