@@ -44,7 +44,7 @@ FileNames = {File.name}';
 Length_Names = size(FileNames, 1);
 
 % Define the smoothing kernel (Full Width at Half Maximum) in mm.
-fwhm_kernel = 6; 
+fwhm_kernel = 4; % for 7T data
 
 % Start a parallel pool to speed up processing. Adjust the number of workers as needed.
 parpool("local", 4);
@@ -62,10 +62,10 @@ parfor i = 3:Length_Names
 
     % Define the four fMRI runs to be processed.
     run_names = { ...
-        'rfMRI_REST1_LR_Atlas_MSMAll.dtseries.nii', ...
-        'rfMRI_REST1_RL_Atlas_MSMAll.dtseries.nii', ...
-        'rfMRI_REST2_LR_Atlas_MSMAll.dtseries.nii', ...
-        'rfMRI_REST2_RL_Atlas_MSMAll.dtseries.nii'  ...
+        'rfMRI_REST1_7T_PA_Atlas_1.6mm_MSMAll_hp2000_clean.dtseries.nii', ...
+        'rfMRI_REST2_7T_AP_Atlas_1.6mm_MSMAll_hp2000_clean.dtseries.nii', ...
+        'rfMRI_REST3_7T_PA_Atlas_1.6mm_MSMAll_hp2000_clean.dtseries.nii', ...
+        'rfMRI_REST4_7T_AP_Atlas_1.6mm_MSMAll_hp2000_clean.dtseries.nii'  ...
     };
     
     % Process each of the four runs for the subject.
@@ -78,8 +78,8 @@ parfor i = 3:Length_Names
             % Construct the wb_command for CIFTI smoothing.
             % This command smooths the data along the cortical surface, which is the
             % standard and recommended procedure for HCP-style data.
-            left_surf = fullfile(path_surface_atlases, 'L.sphere.32k_fs_LR.surf.gii');
-            right_surf = fullfile(path_surface_atlases, 'R.sphere.32k_fs_LR.surf.gii');
+            left_surf = fullfile(path_surface_atlases, 'L.sphere.59k_fs_LR.surf.gii');
+            right_surf = fullfile(path_surface_atlases, 'R.sphere.59k_fs_LR.surf.gii');
             
             cmd = sprintf(['wb_command -cifti-smoothing "%s" %d %d COLUMN "%s" ' ...
                 '-left-surface "%s" -right-surface "%s"'], ...
@@ -113,10 +113,10 @@ if ~exist(path_processed_fmri, 'dir'), mkdir(path_processed_fmri); end
 
 % Define the smoothed file names (suffix added in Part 1).
 run_templates = { ...
-    '\rfMRI_REST1_LR_Atlas_MSMAll_smooth.dtseries.nii', ...
-    '\rfMRI_REST1_RL_Atlas_MSMAll_smooth.dtseries.nii', ...
-    '\rfMRI_REST2_LR_Atlas_MSMAll_smooth.dtseries.nii', ...
-    '\rfMRI_REST2_RL_Atlas_MSMAll_smooth.dtseries.nii' ...
+    '\rfMRI_REST1_7T_PA_Atlas_1.6mm_MSMAll_hp2000_clean_smooth.dtseries.nii', ...
+    '\rfMRI_REST2_7T_AP_Atlas_1.6mm_MSMAll_hp2000_clean_smooth.dtseries.nii', ...
+    '\rfMRI_REST3_7T_PA_Atlas_1.6mm_MSMAll_hp2000_clean_smooth.dtseries.nii', ...
+    '\rfMRI_REST4_7T_AP_Atlas_1.6mm_MSMAll_hp2000_clean_smooth.dtseries.nii' ...
 };
 
 % Parameters for band-pass filtering.
@@ -190,8 +190,8 @@ for i = 3:Length_Names
         % !! IMPORTANT !!
         % The indices below are specific to a particular brain atlas and parcellation.
         % You MUST replace them with the correct vertex indices for your ROIs.
-        ROI_L_indices = 86120:86416; % Example: Left Globus Pallidus
-        ROI_R_indices = 86417:86676; % Example: Right Globus Pallidus
+        ROI_L_indices = 160307:160889; % Example: Left Globus Pallidus
+        ROI_R_indices = 160890:161388; % Example: Right Globus Pallidus
         
         ROI_L_ts = ts_filtered(ROI_L_indices, :);
         ROI_R_ts = ts_filtered(ROI_R_indices, :);
@@ -291,8 +291,8 @@ end
 num_subjects = Length_Names - 2;
 % !! NOTE !!: The dimensions for the pre-allocated matrices must match your ROI sizes.
 % Please verify these numbers based on your atlas.
-num_vertices_L = 297; % Example from original code
-num_vertices_R = 260; % Example from original code
+num_vertices_L = 583; % Example from original code, change to your data
+num_vertices_R = 499; % Example from original code, change to your data
 
 % Pre-allocate matrices to hold data from all subjects.
 FC_similarity_L_all = zeros(num_vertices_L, num_vertices_L, num_subjects);
@@ -363,11 +363,11 @@ fprintf('--- Pipeline complete. Group average matrices are computed and combined
 % --- USER-DEFINED PARAMETERS ---
 % Load your data here. 'data' should be a matrix where each row is a data point
 % and each column is a feature.
-s = FC_DTI_combined_L;
+s = FC_DTI_combined_L; % Each hemisphere calculates separately.
 data = s; % Example: s is a pre-loaded variable from your workspace
 
 % NC: The number of clusters to identify.
-num_clusters = your_cluster_count; % Example: 3
+num_clusters = your_cluster_count; % Example: 3, determine your cluster count based on decision graphs and other factors.
 
 % Visualization flag and parameters (only used in Part 5).
 enable_visualization = true; % Set to 'false' to skip the visualization part.
@@ -582,9 +582,9 @@ end
 fprintf('Clustering complete. Found %d clusters.\n', NC);
 
 %% Visualization
-roiFile='E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\GP_mask_3T_left.nii'; % Replace with the local address of your mask
+roiFile='E:\research\GP-sub\7T_result\GP_mask_7T_left.nii'; % Replace with the local address of your mask
 %subcortex mask
 [~,ins_roi]=read(roiFile); ind_roi=find(ins_roi);
-GP_lh=zeros(91,109,91);
+GP_lh=zeros(113,136,113);
 GP_lh(ind_roi)=cluster;
-mat2nii(GP_lh,'E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\n\GP_left3T.nii',size(GP_lh),32,'E:\research\GP-sub\7T_result\word\npj0614\review\supplementary_experiments\GP_mask_3T_left.nii');
+mat2nii(GP_lh,'E:\research\GP-sub\7T_result\GP_left3T.nii',size(GP_lh),32,'E:\research\GP-sub\7T_result\GP_mask_7T_left.nii');
